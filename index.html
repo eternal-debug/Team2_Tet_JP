@@ -3,56 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Wave 4 JP Team 2 | Musubi - The Connected Journey</title>
+    <title>Niên Hoa Ký | Xuân Bính Ngọ</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+JP:wght@300;600;900&family=Manrope:wght@300;400;700&family=Great+Vibes&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@100;300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Great+Vibes&family=WindSong&family=Noto+Serif+SC:wght@200;700;900&display=swap"
       rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/MotionPathPlugin.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 
     <script>
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              jp: {
-                red: "#C42128",
-                black: "#121212",
-                gold: "#D4AF37",
-                paper: "#F4F4F0",
-                ink: "#1A1A1A",
-                pink: "#FFC0CB",
-              },
+              "lacquer-red": "#5e0b15",
+              "antique-gold": "#c8a665",
+              "rice-paper": "#f7f5f0",
+              "ink-black": "#2b2b2b",
+              "deep-green": "#1a2621",
+              "momo-pink": "#A50064",
             },
             fontFamily: {
-              cinzel: ['"Cinzel"', "serif"],
-              serif: ['"Noto Serif JP"', "serif"],
-              sans: ['"Manrope"', "sans-serif"],
-              script: ['"Great Vibes"', "cursive"],
+              serif: ['"Playfair Display"', "serif"],
+              sans: ['"Be Vietnam Pro"', "sans-serif"],
+              calligraphy: ['"Great Vibes"', "cursive"],
+              brush: ['"WindSong"', "cursive"],
+              kanji: ['"Noto Serif SC"', "serif"],
             },
-            animation: {
-              "spin-slow": "spin 12s linear infinite",
-              pulse: "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-              float: "float 3s ease-in-out infinite",
-            },
-            keyframes: {
-              float: {
-                "0%, 100%": { transform: "translateY(0)" },
-                "50%": { transform: "translateY(-10px)" },
-              },
+            backgroundImage: {
+              "texture-paper":
+                "url('https://www.transparenttextures.com/patterns/rice-paper-2.png')",
+              "texture-dark":
+                "url('https://www.transparenttextures.com/patterns/asfalt-dark.png')",
             },
           },
         },
@@ -60,766 +55,855 @@
     </script>
 
     <style>
+      :root {
+        --cursor-size: 30px;
+      }
       body {
-        background-color: #0f0f0f;
-        color: #f4f4f0;
-        overflow: hidden;
+        background-color: #f7f5f0;
+        color: #2b2b2b;
         cursor: none;
+        overflow-x: hidden;
       }
 
-      .washi-overlay {
+      /* --- CORE STYLES --- */
+      .paper-texture {
         position: fixed;
         inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.07'/%3E%3C/svg%3E");
+        z-index: 50;
         pointer-events: none;
-        z-index: 40;
+        opacity: 0.06;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
       }
 
-      #sakura-canvas {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        pointer-events: none;
-      }
-
-      #preloader {
-        position: fixed;
-        inset: 0;
-        background-color: #0f0f0f;
-        z-index: 99999;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 2rem;
-        cursor: pointer;
-        transition: opacity 0.8s ease-in-out, visibility 0.8s;
-      }
-
-      .luxury-stamp-container {
-        position: relative;
-        width: 120px;
-        height: 120px;
-      }
-
-      .luxury-stamp {
-        width: 100%;
-        height: 100%;
-        fill: #d4af37;
-        filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.4));
-        animation: pulse-subtle 4s ease-in-out infinite;
-      }
-
-      @keyframes pulse-subtle {
-        0%,
-        100% {
-          transform: scale(1);
-          opacity: 0.9;
-          filter: drop-shadow(0 4px 8px rgba(212, 175, 55, 0.4));
-        }
-        50% {
-          transform: scale(1.05);
-          opacity: 1;
-          filter: drop-shadow(0 6px 12px rgba(212, 175, 55, 0.6));
-        }
-      }
-
-      .click-hint-btn {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 0.8rem 2.5rem;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(212, 175, 55, 0.5);
-        border-radius: 9999px;
-        backdrop-filter: blur(10px);
-        color: #d4af37;
-        font-family: "Manrope", sans-serif;
-        text-transform: uppercase;
-        letter-spacing: 0.2em;
-        font-size: 0.875rem;
-        font-weight: 600;
-        cursor: pointer;
+      .photo-frame {
         position: relative;
         overflow: hidden;
+        transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.2);
+        background: #f7f5f0;
+        padding: 8px;
       }
-
-      .click-hint-btn::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: -100%;
+      .photo-frame img {
+        transition: transform 1.5s ease, filter 1.2s ease;
+        display: block;
         width: 100%;
         height: 100%;
-        background: linear-gradient(
-          90deg,
-          transparent,
-          rgba(212, 175, 55, 0.2),
-          transparent
-        );
-        transition: left 0.7s;
+        object-fit: cover;
+        filter: grayscale(0%);
+      }
+      .photo-frame:hover img {
+        transform: scale(1.08);
+      }
+      .photo-frame::before {
+        content: "";
+        position: absolute;
+        inset: 4px;
+        border: 1px solid #c8a665;
+        z-index: 10;
+        pointer-events: none;
       }
 
-      .click-hint-btn:hover {
-        background: rgba(212, 175, 55, 0.1);
-        border-color: #d4af37;
-        box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-        color: #fff;
+      #chapter-1 .photo-frame img {
+        filter: grayscale(100%) contrast(1.1);
+      }
+      #chapter-1 .photo-frame:hover img {
+        filter: grayscale(0%) contrast(1);
       }
 
-      .click-hint-btn:hover::before {
-        left: 100%;
-      }
-
-      .loaded .click-hint-btn {
-        opacity: 1;
-        transform: translateY(0);
-      }
-      .loaded .luxury-stamp-container {
-        animation: float 3s ease-in-out infinite;
-      }
-      .loaded #loading-text {
-        display: none;
-      }
-
-      .cursor-dot,
-      .cursor-outline {
+      .watermark {
         position: fixed;
-        top: 0;
-        left: 0;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        z-index: 9999;
+        opacity: 0.08;
+        fill: #5e0b15;
+        mix-blend-mode: multiply;
         pointer-events: none;
-      }
-      .cursor-dot {
-        width: 8px;
-        height: 8px;
-        background-color: #c42128;
-      }
-      .cursor-outline {
-        width: 40px;
-        height: 40px;
-        border: 1px solid rgba(212, 175, 55, 0.5);
-        transition: width 0.2s, height 0.2s, background-color 0.2s;
-      }
-      body.hovering .cursor-outline {
-        width: 60px;
-        height: 60px;
-        background-color: rgba(196, 33, 40, 0.1);
-        border-color: #c42128;
-      }
-
-      .musubi-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        overflow: visible;
-        pointer-events: none;
-      }
-
-      .vertical-rl {
-        writing-mode: vertical-rl;
-        text-orientation: upright;
-        letter-spacing: 0.5em;
-      }
-
-      .image-frame {
-        position: relative;
-        overflow: hidden;
-        transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-      }
-      .image-frame::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border: 1px solid rgba(212, 175, 55, 0.3);
-        transform: scale(0.92);
-        transition: transform 0.5s;
-      }
-      .image-frame:hover {
-        transform: scale(1.05) rotate(1deg);
-        z-index: 20;
-      }
-      .image-frame:hover::after {
-        transform: scale(1);
-        border-color: #d4af37;
-      }
-
-      .member-card {
-        background: rgba(26, 26, 26, 0.4);
-        backdrop-filter: blur(5px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        transition: all 0.4s ease;
-      }
-      .member-card:hover {
-        background: rgba(196, 33, 40, 0.15);
-        border-color: #d4af37;
-        transform: translateX(10px);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      }
-
-      .envelope-wrapper {
-        position: relative;
-        width: 300px;
-        height: 450px;
-        cursor: pointer;
-        perspective: 1000px;
-        z-index: 30;
-        margin-top: 20px;
-      }
-      .env-layer {
-        position: absolute;
-        left: 0;
-        width: 100%;
-      }
-      .env-back {
-        bottom: 0;
-        height: 100%;
-        background-color: #a6001a;
-        border-radius: 8px;
-        z-index: 1;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      }
-      .env-card {
-        bottom: 10px;
-        left: 5%;
-        width: 90%;
-        height: 85%;
-        background: #fff;
-        z-index: 2;
-        border-radius: 6px;
-        transition: transform 0.5s;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        text-align: center;
-        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-      }
-      .env-front {
-        bottom: 0;
-        height: 80%;
-        background: linear-gradient(135deg, #c42128 0%, #d93038 100%);
-        border-radius: 0 0 8px 8px;
-        z-index: 10;
-        border: 2px solid #d4af37;
-        border-top: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .env-front::before {
-        content: "";
-        position: absolute;
-        top: -40px;
-        left: 0;
-        width: 100%;
-        height: 40px;
-        background: inherit;
-        clip-path: polygon(0 100%, 50% 0, 100% 100%);
-        z-index: 10;
-      }
-      .env-flap {
-        top: 0;
-        height: 120px;
-        background-color: #900015;
-        clip-path: polygon(0 0, 50% 100%, 100% 0);
-        transform-origin: top;
-        z-index: 20;
-        transition: transform 0.6s ease-in-out;
-      }
-      .envelope-wrapper.is-open .env-flap {
-        transform: rotateX(180deg);
         z-index: 0;
       }
-      .decor-circle {
-        width: 80px;
-        height: 80px;
-        border: 2px solid #d4af37;
+
+      #petal-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      ::-webkit-scrollbar {
+        width: 0px;
+      }
+
+      .path-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      /* Custom Cursor */
+      .cursor-dot {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        background-color: #5e0b15;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+      }
+      .cursor-circle {
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        border: 1px solid #c8a665;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .hover-target:hover ~ .cursor-circle,
+      a:hover ~ .cursor-circle,
+      button:hover ~ .cursor-circle,
+      input:hover ~ .cursor-circle {
+        width: 60px;
+        height: 60px;
+        background-color: rgba(94, 11, 21, 0.05);
+        border-color: #5e0b15;
+      }
+
+      .vertical-text {
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+      }
+
+      .curtain-panel {
+        position: fixed;
+        top: 0;
+        width: 50vw;
+        height: 100%;
+        background-color: #1a1a1a;
+        z-index: 10000;
+        will-change: transform;
+      }
+      .curtain-left {
+        left: 0;
+        border-right: 1px solid #333;
+      }
+      .curtain-right {
+        right: 0;
+        border-left: 1px solid #333;
+      }
+
+      /* Finale Elements */
+      .finale-stage {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        perspective: 1200px;
+      }
+
+      .branch-container {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 600px;
+        height: 200px;
+        z-index: 20;
+        pointer-events: none;
+      }
+
+      .hanging-string {
+        position: absolute;
+        top: 120px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 1px;
+        height: 150px;
+        background: #c8a665;
+        transform-origin: top center;
+        z-index: 19;
+      }
+      .knot {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        width: 16px;
+        height: 16px;
+        background: #c8a665;
+        border-radius: 50%;
+        z-index: 21;
+      }
+
+      .red-envelope {
+        position: absolute;
+        top: 270px;
+        left: 50%;
+        transform: translate(-50%, 0);
+        transform-origin: top center;
+        width: 140px;
+        height: 220px;
+        background: linear-gradient(135deg, #7a1f2e 0%, #5e0b15 100%);
+        border: 2px solid #c8a665;
+        border-radius: 6px;
+        cursor: pointer;
+        z-index: 30;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: sway 5s ease-in-out infinite alternate;
+      }
+      .red-envelope:hover {
+        box-shadow: 0 0 25px rgba(200, 166, 101, 0.4);
+        border-color: #fff;
+      }
+      @keyframes sway {
+        from {
+          transform: translate(-50%, 0) rotate(-2deg);
+        }
+        to {
+          transform: translate(-50%, 0) rotate(2deg);
+        }
+      }
+
+      .envelope-seal {
+        width: 56px;
+        height: 56px;
+        border: 1px solid #c8a665;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(166, 0, 26, 0.5);
-        box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        background-color: #5e0b15;
+        color: #c8a665;
+        font-family: "Noto Serif SC", serif;
+        font-size: 28px;
+        font-weight: 700;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .scroll-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scaleY(0);
+        width: 340px;
+        height: 520px;
+        transform-origin: top center;
+        z-index: 25;
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .scroll-body {
+        width: 100%;
+        height: 100%;
+        background-color: #fcfbf9;
+        background-image: url("https://www.transparenttextures.com/patterns/rice-paper-2.png");
+        border-left: 1px solid #e5e5e5;
+        border-right: 1px solid #e5e5e5;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px 30px;
+        text-align: center;
+        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+      }
+
+      .scroll-stick-top,
+      .scroll-stick-bottom {
+        position: absolute;
+        left: -12px;
+        right: -12px;
+        height: 16px;
+        background: #3e2b20;
+        border-radius: 8px;
+        z-index: 30;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+      .scroll-stick-top {
+        top: 0;
+      }
+      .scroll-stick-bottom {
+        bottom: 0;
+      }
+
+      /* Styles cho phần Form nhập liệu và Nút Momo */
+      .auth-input {
+        font-family: "Noto Serif SC", serif;
+        border: none;
+        border-bottom: 2px solid #c8a665;
+        background: transparent;
+        text-align: center;
+        font-size: 1.5rem;
+        color: #5e0b15;
+        outline: none;
+        padding: 8px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        width: 80%;
+        margin-bottom: 20px;
+        transition: border-color 0.3s;
+      }
+      .auth-input::placeholder {
+        color: #ccc;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+      }
+      .auth-input:focus {
+        border-bottom-color: #5e0b15;
+      }
+      .auth-btn {
+        background-color: #5e0b15;
+        color: #c8a665;
+        font-family: "Be Vietnam Pro", sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding: 10px 30px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
+        transition: all 0.3s;
+        border: 1px solid #c8a665;
+      }
+      .auth-btn:hover {
+        background-color: #c8a665;
+        color: #5e0b15;
+        transform: translateY(-2px);
+      }
+      .btn-momo {
+        background-color: #a50064;
+        color: white;
+        font-family: "Be Vietnam Pro", sans-serif;
+        font-weight: 700;
+        padding: 12px 25px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 8px 20px rgba(165, 0, 100, 0.3);
+        transition: all 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        text-decoration: none;
+      }
+      .btn-momo:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(165, 0, 100, 0.4);
+        background-color: #b80070;
+      }
+      .btn-momo i {
+        font-size: 1.2rem;
       }
     </style>
   </head>
-  <body class="selection:bg-jp-red selection:text-white">
-    <div id="preloader" class="interact-hover">
-      <div class="luxury-stamp-container">
-        <svg
-          class="luxury-stamp"
-          viewBox="0 0 100 100"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g transform="translate(50,50)">
-            <path
-              d="M0,0 C10,-20 20,-30 0,-45 C-20,-30 -10,-20 0,0"
-              transform="rotate(0) translate(0,-5)"
-            />
-            <path
-              d="M0,0 C10,-20 20,-30 0,-45 C-20,-30 -10,-20 0,0"
-              transform="rotate(72) translate(0,-5)"
-            />
-            <path
-              d="M0,0 C10,-20 20,-30 0,-45 C-20,-30 -10,-20 0,0"
-              transform="rotate(144) translate(0,-5)"
-            />
-            <path
-              d="M0,0 C10,-20 20,-30 0,-45 C-20,-30 -10,-20 0,0"
-              transform="rotate(216) translate(0,-5)"
-            />
-            <path
-              d="M0,0 C10,-20 20,-30 0,-45 C-20,-30 -10,-20 0,0"
-              transform="rotate(288) translate(0,-5)"
-            />
-            <circle cx="0" cy="0" r="4" fill="#B49430" />
-          </g>
-        </svg>
-      </div>
-
-      <h2
-        id="loading-text"
-        class="text-jp-gold font-cinzel tracking-widest text-lg animate-pulse"
+  <body class="antialiased selection:bg-lacquer-red selection:text-white">
+    <div class="curtain-panel curtain-left" id="curtain-left"></div>
+    <div class="curtain-panel curtain-right" id="curtain-right"></div>
+    <div
+      id="loader-content"
+      class="fixed inset-0 z-[10001] flex flex-col items-center justify-center pointer-events-none text-rice-paper"
+    >
+      <h1
+        class="font-serif text-5xl md:text-7xl tracking-widest mb-2 opacity-0 transform translate-y-10"
+        id="loader-title"
       >
-        CONNECTING...
-      </h2>
-
-      <button class="click-hint-btn">Chạm để bắt đầu hành trình</button>
-
-      <p class="text-gray-600 font-serif text-xs italic fixed bottom-10">
-        "Musubi - Sự kết nối của thời gian"
+        NIÊN HOA KÝ
+      </h1>
+      <p
+        class="font-sans text-xs tracking-[0.4em] text-antique-gold opacity-0 transform translate-y-5"
+        id="loader-sub"
+      >
+        LOADING CONCEPT...
       </p>
     </div>
 
-    <div class="washi-overlay"></div>
-    <canvas id="sakura-canvas"></canvas>
+    <div class="paper-texture"></div>
+
+    <svg
+      class="watermark"
+      style="top: 2%; right: -5%; width: 500px"
+      viewBox="0 0 200 200"
+    >
+      <path
+        d="M20,100 Q40,40 100,50 T180,80 L160,90 Q120,70 80,90 Z"
+        fill="none"
+        stroke="#5e0b15"
+        stroke-width="1.5"
+      />
+      <path
+        d="M180,80 L190,70 M180,80 L195,85"
+        stroke="#5e0b15"
+        stroke-width="1.5"
+      />
+      <circle cx="20" cy="100" r="3" fill="#5e0b15" />
+    </svg>
+
+    <svg
+      class="watermark"
+      style="bottom: -10%; left: -10%; width: 800px; opacity: 0.1"
+      viewBox="0 0 200 200"
+    >
+      <path
+        d="M100,180 Q60,120 100,40 Q140,120 100,180"
+        fill="none"
+        stroke="#c8a665"
+        stroke-width="1"
+      />
+      <path
+        d="M100,180 Q50,140 40,80 Q70,120 100,180"
+        fill="none"
+        stroke="#c8a665"
+        stroke-width="1"
+      />
+      <path
+        d="M100,180 Q150,140 160,80 Q130,120 100,180"
+        fill="none"
+        stroke="#c8a665"
+        stroke-width="1"
+      />
+      <path d="M90,180 L110,180" stroke="#c8a665" stroke-width="2" />
+    </svg>
+
+    <canvas id="petal-canvas"></canvas>
 
     <div class="cursor-dot"></div>
-    <div class="cursor-outline"></div>
+    <div class="cursor-circle"></div>
 
-    <div class="musubi-container">
+    <div class="path-container">
       <svg
-        id="musubi-svg"
-        preserveAspectRatio="none"
+        id="scroll-svg"
         width="100%"
         height="100%"
-        xmlns="http://www.w3.org/2000/svg"
+        preserveAspectRatio="none"
       >
-        <defs>
-          <filter id="glow-gold">
-            <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
         <path
-          id="thread-red"
+          id="main-path"
+          d=""
           fill="none"
-          stroke="#D93038"
-          stroke-width="5"
+          stroke="#5e0b15"
+          stroke-width="1.5"
+          stroke-opacity="0.6"
           stroke-linecap="round"
-          style="filter: url(#glow-gold)"
         />
         <path
-          id="thread-gold"
+          id="bloom-path"
+          d=""
           fill="none"
-          stroke="#E5C15D"
-          stroke-width="2.5"
-          stroke-dasharray="10, 15"
-          stroke-opacity="0.8"
+          stroke="#c8a665"
+          stroke-width="2"
+          stroke-dasharray="10, 20"
+          stroke-opacity="0.3"
         />
       </svg>
     </div>
 
-    <main class="relative w-full z-10">
+    <main class="relative w-full z-10" id="main-content">
       <section
+        class="h-screen relative flex items-center justify-center overflow-hidden"
         id="hero"
-        class="h-screen flex flex-col items-center justify-center relative px-6"
       >
-        <div class="absolute top-10 left-10 md:left-20 opacity-20 select-none">
-          <span
-            class="vertical-rl text-6xl md:text-8xl font-serif font-black text-jp-red"
+        <div
+          class="absolute inset-0 opacity-5 pointer-events-none flex justify-center items-center"
+        >
+          <span class="font-kanji text-[30vw] text-lacquer-red select-none"
+            >迎春</span
           >
-            結び
-          </span>
         </div>
-        <div class="text-center z-10 interact-hover">
-          <div class="overflow-hidden mb-4">
-            <p
-              class="text-jp-gold font-sans tracking-[0.5em] text-sm uppercase reveal-text"
-            >
-              Appen Data Tech • 2025
-            </p>
-          </div>
-          <h1
-            class="font-cinzel text-5xl md:text-8xl font-bold text-white leading-tight mb-2"
-          >
-            <span class="block reveal-text" style="animation-delay: 0.1s"
-              >WAVE 4</span
-            >
-            <span
-              class="block text-jp-red reveal-text"
-              style="animation-delay: 0.2s"
-              >JP TEAM 2</span
-            >
-          </h1>
+
+        <div class="z-10 text-center px-4 relative mix-blend-darken">
           <div
-            class="w-1 h-24 bg-gradient-to-b from-jp-gold to-transparent mx-auto mt-8"
+            class="relative w-24 h-24 mx-auto mb-6 flex items-center justify-center hero-seal opacity-0"
+          >
+            <div
+              class="absolute inset-0 border-[2px] border-lacquer-red rotate-45 transform origin-center hover:rotate-[225deg] transition-transform duration-1000"
+            ></div>
+            <div
+              class="absolute inset-2 border border-lacquer-red rotate-45"
+            ></div>
+            <span
+              class="relative font-kanji text-lacquer-red text-4xl z-10 font-bold select-none cursor-default"
+              >福</span
+            >
+          </div>
+
+          <p
+            class="font-brush text-5xl md:text-7xl text-lacquer-red mb-4"
+            data-speed="0.9"
+          >
+            Chào xuân Bính Ngọ
+          </p>
+
+          <div class="text-reveal-wrapper mb-6">
+            <h1
+              class="font-serif text-8xl md:text-[11rem] font-bold text-ink-black leading-[0.9] text-reveal hero-title tracking-tight"
+            >
+              2026
+            </h1>
+          </div>
+
+          <div class="h-[1px] w-0 bg-antique-gold mx-auto mb-8 hero-line"></div>
+
+          <p
+            class="font-sans text-gray-600 max-w-lg mx-auto text-sm md:text-base tracking-wide leading-relaxed opacity-0 hero-desc"
+          >
+            "Thời gian trôi qua kẽ tay như cát mịn. <br />
+            Chúng ta giữ lại những hạt vàng lấp lánh nhất: Ký ức."
+          </p>
+        </div>
+
+        <div
+          class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 hero-scroll"
+        >
+          <span class="text-[10px] tracking-[0.3em] uppercase text-lacquer-red"
+            >Khởi hành</span
+          >
+          <div
+            class="w-[1px] h-12 bg-gradient-to-b from-lacquer-red to-transparent"
           ></div>
         </div>
-        <div
-          class="absolute bottom-10 flex flex-col items-center animate-bounce"
-        >
-          <span class="text-xs text-gray-500 mb-2 vertical-rl h-16"
-            >SCROLL</span
-          >
-        </div>
       </section>
 
-      <div class="container mx-auto px-4 py-20 relative">
-        <section
-          id="phase-1"
-          class="min-h-[80vh] flex items-center justify-center py-20"
-        >
-          <div
-            class="grid grid-cols-1 md:grid-cols-12 gap-8 w-full items-center"
-          >
-            <div class="md:col-span-5 text-right space-y-4 interact-hover">
+      <section class="min-h-screen relative py-32" id="chapter-members">
+        <div class="container mx-auto px-6 relative z-10">
+          <div class="text-center mb-20 relative">
+            <span
+              class="block font-serif text-[6rem] md:text-[8rem] text-gray-200 font-bold opacity-40 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-0 tracking-widest pointer-events-none"
+              >PEOPLE</span
+            >
+            <div class="relative z-10">
               <h2
-                class="text-6xl text-jp-paper font-serif opacity-10 absolute -top-10 left-0 select-none"
+                class="text-4xl md:text-6xl font-serif font-bold text-ink-black mb-3 hover-target"
               >
-                01
+                Nhân Hòa
               </h2>
-              <h3 class="text-4xl md:text-5xl font-serif font-bold text-white">
-                Khởi Nguyên
-              </h3>
-              <p class="text-jp-gold font-mono">30.06.2025</p>
-              <p
-                class="text-gray-400 font-serif italic text-lg leading-relaxed"
+              <p class="font-calligraphy text-3xl text-lacquer-red">
+                Duyên phận hội ngộ
+              </p>
+              <div class="w-16 h-[2px] bg-antique-gold mx-auto mt-6"></div>
+            </div>
+          </div>
+
+          <div
+            class="flex flex-col items-center mb-24 member-block opacity-0 translate-y-10"
+          >
+            <div
+              class="relative p-10 border-double border-4 border-antique-gold/30 bg-white/80 backdrop-blur-sm max-w-2xl w-full text-center hover:border-lacquer-red transition duration-500 shadow-xl"
+            >
+              <svg
+                class="absolute top-2 left-2 w-8 h-8 text-lacquer-red opacity-50"
+                viewBox="0 0 20 20"
+                fill="currentColor"
               >
-                "Vạn sự khởi đầu nan. Những viên gạch đầu tiên được đặt xuống
-                giữa lòng Hà Nội."
+                <path d="M0,0 L10,0 L0,10 Z" />
+              </svg>
+              <svg
+                class="absolute bottom-2 right-2 w-8 h-8 text-lacquer-red opacity-50"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path d="M20,20 L10,20 L20,10 Z" />
+              </svg>
+
+              <p
+                class="font-sans text-xs tracking-[0.4em] text-gray-500 uppercase mb-4"
+              >
+                The Captain
+              </p>
+              <h3
+                class="font-serif text-5xl md:text-6xl font-bold text-lacquer-red mb-4"
+              >
+                Trịnh Huy Hoàng
+              </h3>
+              <p class="font-serif italic text-gray-600 text-lg">
+                "Người cầm lái con thuyền vượt qua mọi sóng gió để vươn ra biển
+                lớn."
               </p>
             </div>
-            <div class="md:col-span-2 hidden md:flex"></div>
+          </div>
+
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-12 max-w-5xl mx-auto"
+          >
             <div
-              class="md:col-span-5 border-l border-jp-gold/30 pl-8 space-y-3"
+              class="relative border-l-2 border-dashed border-antique-gold pl-8 md:pl-12 py-4 member-col"
+              data-speed="0.95"
             >
-              <div class="stagger-list space-y-3">
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Nguyễn Đình Huy</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Trần Hồng Trang Nhung</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Đặng Phạm Châu Nhi</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Nguyễn Hoàng Anh</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Mai Trọng Tân</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Nguyễn Thị Hằng</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Nguyễn Anh Dũng</span
-                  >
-                </div>
-                <div
-                  class="mt-4 p-4 bg-gradient-to-r from-jp-red/20 to-transparent border border-jp-red/60 rounded relative overflow-hidden group interact-hover hover:scale-105 transition-transform duration-300"
+              <div
+                class="absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 border-antique-gold bg-lacquer-red"
+              ></div>
+              <div class="mb-8">
+                <h4 class="font-serif text-3xl text-ink-black font-bold mb-1">
+                  Khởi Nguyên
+                </h4>
+                <p
+                  class="font-sans text-sm text-antique-gold tracking-widest font-bold"
                 >
-                  <span
-                    class="text-xs text-jp-gold uppercase font-bold tracking-widest"
-                    >Special Guest</span
-                  >
-                  <div class="font-bold text-xl text-white mt-1">
-                    Trần Thùy Dương
-                  </div>
-                  <div
-                    class="absolute -right-2 -bottom-2 text-6xl opacity-10 text-jp-red"
-                  >
-                    <i class="fa-solid fa-star"></i>
-                  </div>
-                </div>
+                  Giai đoạn 1
+                </p>
               </div>
+              <ul class="space-y-4 font-serif text-lg text-gray-700">
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Nguyễn Đình Huy
+                </li>
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Trần Hồng Trang Nhung
+                </li>
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Đặng Phạm Châu Nhi
+                </li>
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Nguyễn Hoàng Anh
+                </li>
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Mai Trọng Tân
+                </li>
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Nguyễn Thị Hằng
+                </li>
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Nguyễn Anh Dũng
+                </li>
+                <li class="mt-8 pt-6 border-t border-gray-200">
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-10 h-10 rounded-full bg-lacquer-red text-white flex items-center justify-center font-bold font-serif"
+                    >
+                      VIP
+                    </div>
+                    <div>
+                      <span
+                        class="block text-[10px] uppercase tracking-wider text-gray-400"
+                        >Special Guest</span
+                      >
+                      <span class="font-bold text-ink-black text-xl font-serif"
+                        >Trần Thùy Dương</span
+                      >
+                    </div>
+                  </div>
+                </li>
+              </ul>
             </div>
-          </div>
-        </section>
 
-        <section
-          id="phase-2"
-          class="min-h-[80vh] flex items-center justify-center py-20"
-        >
-          <div
-            class="grid grid-cols-1 md:grid-cols-12 gap-8 w-full items-center"
-          >
             <div
-              class="md:col-span-5 order-2 md:order-1 border-r border-jp-gold/30 pr-8 space-y-3 text-right"
+              class="relative border-l-2 border-dashed border-antique-gold pl-8 md:pl-12 py-4 member-col"
+              data-speed="1.05"
             >
-              <div class="stagger-list-2 space-y-3">
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Nguyễn Thị Nga</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Nguyễn Thành Luân</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Nguyễn Thị Phương Thảo</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Dương Thùy Quyên</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Trần Quốc Cường</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Bùi Thị Hằng</span
-                  >
-                </div>
-                <div class="member-card p-3 rounded interact-hover group">
-                  <span
-                    class="font-sans font-bold group-hover:text-jp-gold transition-colors"
-                    >Nguyễn Hoàng Phương Linh</span
-                  >
-                </div>
+              <div
+                class="absolute -left-[9px] top-0 w-4 h-4 rounded-full border-2 border-antique-gold bg-lacquer-red"
+              ></div>
+              <div class="mb-8">
+                <h4 class="font-serif text-3xl text-ink-black font-bold mb-1">
+                  Hội Tụ
+                </h4>
+                <p
+                  class="font-sans text-sm text-antique-gold tracking-widest font-bold"
+                >
+                  Giai đoạn 2
+                </p>
               </div>
-            </div>
-            <div class="md:col-span-2 hidden md:flex"></div>
-            <div class="md:col-span-5 order-3 space-y-4 interact-hover">
-              <h2
-                class="text-6xl text-jp-gold font-serif opacity-10 absolute -top-10 right-0 select-none"
-              >
-                02
-              </h2>
-              <h3 class="text-4xl md:text-5xl font-serif font-bold text-white">
-                Hội Tụ
-              </h3>
-              <p class="text-jp-gold font-mono">14.07.2025</p>
-              <p
-                class="text-gray-400 font-serif italic text-lg leading-relaxed"
-              >
-                "Mảnh ghép hoàn thiện. Đội hình Team 2 chính thức cất cánh, sẵn
-                sàng cho những thử thách mới."
-              </p>
+              <ul class="space-y-4 font-serif text-lg text-gray-700">
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Nguyễn Thị Nga
+                </li>
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Nguyễn Thành Luân
+                </li>
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Nguyễn Thị Phương Thảo
+                </li>
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Dương Thùy Quyên
+                </li>
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Bùi Thị Hằng
+                </li>
+                <li class="flex items-center gap-3 group">
+                  <span
+                    class="w-1.5 h-1.5 bg-antique-gold rotate-45 group-hover:bg-lacquer-red transition"
+                  ></span
+                  >Nguyễn Hoàng Phương Linh
+                </li>
+              </ul>
             </div>
           </div>
-        </section>
-      </div>
-
-      <section
-        class="py-24 bg-gradient-to-b from-transparent via-jp-red/10 to-transparent"
-      >
-        <div class="container mx-auto text-center interact-hover">
-          <div
-            class="inline-block relative p-10 border border-jp-gold/30 rotate-45 mb-10 hover:rotate-90 transition-transform duration-700 ease-in-out"
-          >
-            <div class="absolute inset-2 border border-jp-gold/60"></div>
-            <div class="-rotate-45">
-              <span class="text-6xl font-cinzel text-jp-gold">H</span>
-            </div>
-          </div>
-          <p
-            class="text-jp-red tracking-[0.5em] text-sm uppercase font-bold mb-4"
-          >
-            The Captain
-          </p>
-          <h2 class="text-5xl md:text-7xl font-serif font-bold text-white mb-6">
-            Trịnh Huy Hoàng
-          </h2>
-          <p class="text-xl text-gray-300 italic font-serif max-w-2xl mx-auto">
-            "Người cầm lái con thuyền JP Team 2 vượt qua mọi deadline và sóng
-            gió."
-          </p>
+        </div>
+        <div
+          class="absolute bottom-20 right-10 text-9xl opacity-[0.05] font-kanji vertical-text pointer-events-none select-none text-black"
+        >
+          仲間
         </div>
       </section>
 
-      <section id="memories" class="relative py-20 overflow-hidden">
-        <div class="absolute top-10 left-1/2 -translate-x-1/2 text-center z-10">
-          <h2 class="font-script text-6xl text-jp-gold opacity-50">Kỷ Niệm</h2>
-        </div>
+      <section class="min-h-[150vh] relative py-20" id="chapter-1">
+        <div class="container mx-auto px-6 relative z-10">
+          <div class="md:sticky md:top-20 mb-20 md:mb-0 z-20">
+            <div class="flex items-baseline gap-4">
+              <span
+                class="font-serif text-8xl text-gray-300 font-bold opacity-60"
+                >01</span
+              >
+              <div>
+                <h2
+                  class="text-4xl md:text-5xl font-serif font-bold text-ink-black mb-2 hover-target"
+                >
+                  Kiên Tâm
+                </h2>
+                <p class="font-calligraphy text-2xl text-lacquer-red">
+                  Vững bước qua gian nan
+                </p>
+              </div>
+            </div>
+          </div>
 
-        <div
-          class="story-block min-h-screen flex items-center justify-center relative"
-        >
           <div
-            class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
+            class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 mt-10 md:-mt-20"
           >
-            <div class="space-y-6 z-10 interact-hover">
-              <h3 class="text-4xl font-serif font-bold text-gray-200">
-                Bão Tố & Chông Gai
-              </h3>
-              <p class="text-gray-400 leading-relaxed text-justify">
-                Hà Nội những ngày mưa lịch sử. Ngập lụt, tắc đường, khói bụi.
+            <div class="md:col-start-1 md:pt-40 space-y-6" data-speed="0.9">
+              <p
+                class="font-sans text-gray-600 leading-loose text-justify text-lg relative bg-white/60 p-6 rounded shadow-sm backdrop-blur-sm border border-white"
+              >
+                <span
+                  class="text-7xl float-left mr-3 mt-[-15px] font-serif text-antique-gold"
+                  >H</span
+                >
+                à Nội những ngày mưa lịch sử. Ngập lụt, tắc đường, khói bụi.
                 Những buổi sáng vật lộn với dòng người để đến văn phòng. Khó
                 khăn là thế, nhưng bánh xe vẫn quay và tinh thần team chưa bao
-                giờ tắt.
+                giờ tắt. Khó khăn chỉ là nút thắt làm sợi chỉ đỏ thêm bền chặt.
               </p>
+              <div class="flex items-center gap-4">
+                <div class="w-20 h-[1px] bg-lacquer-red"></div>
+                <p class="text-sm text-gray-400 italic font-serif">
+                  Mùa mưa 2025
+                </p>
+              </div>
             </div>
-            <div class="relative h-[400px] w-full parallax-group">
+
+            <div class="md:col-start-2 grid gap-8">
               <div
-                class="absolute top-0 right-0 w-2/3 h-64 image-frame rotate-3 z-10 bg-gray-800"
+                class="photo-frame w-full aspect-[4/3] transform translate-y-12 rotate-2 hover:rotate-0 hover:z-20"
               >
-                <img
-                  src="assets/traffic_4.jpg"
-                  class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-500"
-                  alt="Traffic"
-                />
+                <img src="assets/flood_2.jpg" alt="Flood" />
               </div>
               <div
-                class="absolute bottom-0 left-10 w-2/3 h-64 image-frame -rotate-3 z-20 bg-gray-800"
+                class="photo-frame w-3/4 ml-auto aspect-square transform -translate-y-8 -rotate-3 hover:rotate-0 hover:z-20"
               >
-                <img
-                  src="assets/flood_2.jpg"
-                  class="w-full h-full object-cover grayscale hover:grayscale-0 transition duration-500"
-                  alt="Flood"
-                />
+                <img src="assets/traffic_4.jpg" alt="Traffic" />
               </div>
             </div>
           </div>
         </div>
-
         <div
-          class="story-block min-h-screen flex items-center justify-center relative"
+          class="absolute top-1/3 left-10 text-9xl opacity-[0.05] font-kanji vertical-text pointer-events-none select-none"
         >
-          <div
-            class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
-          >
-            <div
-              class="relative h-[500px] w-full parallax-group order-2 md:order-1"
-            >
-              <div
-                class="absolute top-10 left-0 w-3/5 h-64 image-frame -rotate-6 z-10"
-              >
-                <img
-                  src="assets/party_1.jpg"
-                  class="w-full h-full object-cover"
-                  alt="Party 1"
-                />
-              </div>
-              <div
-                class="absolute bottom-10 right-0 w-3/5 h-64 image-frame rotate-6 z-20"
-              >
-                <img
-                  src="assets/party_3.jpg"
-                  class="w-full h-full object-cover"
-                  alt="Party 3"
-                />
-              </div>
-              <div
-                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/2 h-48 image-frame z-30 shadow-2xl"
-              >
-                <img
-                  src="assets/party_2.jpg"
-                  class="w-full h-full object-cover"
-                  alt="Party 2"
-                />
-              </div>
-            </div>
-            <div
-              class="space-y-6 z-10 order-1 md:order-2 text-right interact-hover"
-            >
-              <h3 class="text-4xl font-serif font-bold text-jp-gold">
-                Sát Cánh Bên Nhau
-              </h3>
-              <p class="text-gray-400 leading-relaxed text-right">
-                Sau những giờ làm việc căng thẳng là những khoảnh khắc "xả hơi"
-                hết mình. Không chỉ là đồng nghiệp, chúng ta là gia đình bên nồi
-                lẩu nghi ngút khói.
-              </p>
-            </div>
-          </div>
+          堅心
         </div>
+      </section>
 
+      <section
+        class="min-h-[150vh] relative py-20 bg-antique-gold/10"
+        id="chapter-2"
+      >
         <div
-          class="story-block min-h-screen flex items-center justify-center relative"
-        >
-          <div
-            class="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-12 items-center"
-          >
-            <div class="space-y-6 z-10 interact-hover">
-              <h3 class="text-4xl font-serif font-bold text-pink-400">
-                Hạnh Phúc Thăng Hoa
-              </h3>
-              <p class="text-gray-400 leading-relaxed text-justify">
-                Cùng nhau chứng kiến khoảnh khắc trọng đại. Những tà áo dài
-                thướt tha, nụ cười rạng rỡ chúc phúc cho một hành trình mới.
-                Team 2 luôn ở đây, trong những ngày vui nhất.
+          class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-white to-transparent pointer-events-none"
+        ></div>
+
+        <div class="container mx-auto px-6 relative z-10">
+          <div class="flex flex-col md:flex-row-reverse gap-12 md:gap-24">
+            <div class="md:w-1/3 md:sticky md:top-40 h-fit text-right z-20">
+              <span
+                class="font-serif text-8xl text-white/90 font-bold absolute -right-4 -top-16 -z-10 mix-blend-multiply"
+                >02</span
+              >
+              <h2
+                class="text-4xl md:text-5xl font-serif font-bold text-ink-black mb-2 hover-target"
+              >
+                Đồng Lòng
+              </h2>
+              <p class="font-calligraphy text-2xl text-lacquer-red mb-6">
+                Bên nhau sum vầy
               </p>
+
+              <div
+                class="bg-white/80 p-6 shadow-lg border border-antique-gold/20 mb-8 backdrop-blur-md rounded-sm"
+              >
+                <p
+                  class="font-sans text-gray-600 leading-relaxed text-justify md:text-right text-lg"
+                >
+                  Sau những giờ làm việc căng thẳng là những khoảnh khắc "xả
+                  hơi" hết mình. Không chỉ là đồng nghiệp, chúng ta là gia đình
+                  bên nồi lẩu nghi ngút khói.
+                </p>
+              </div>
+
+              <div class="flex flex-wrap justify-end gap-3">
+                <span
+                  class="px-4 py-2 border border-lacquer-red text-lacquer-red text-xs uppercase tracking-wider rounded-full hover:bg-lacquer-red hover:text-white transition cursor-pointer"
+                  >#Teamwork</span
+                >
+                <span
+                  class="px-4 py-2 border border-lacquer-red text-lacquer-red text-xs uppercase tracking-wider rounded-full hover:bg-lacquer-red hover:text-white transition cursor-pointer"
+                  >#Party</span
+                >
+              </div>
             </div>
-            <div class="grid grid-cols-2 gap-4 parallax-group">
-              <div class="col-span-2 image-frame h-64">
-                <img
-                  src="assets/wedding_5.jpeg"
-                  class="w-full h-full object-cover"
-                  alt="Wedding Couple"
-                />
+
+            <div class="md:w-2/3 grid grid-cols-2 gap-6 auto-rows-[250px]">
+              <div class="row-span-2 photo-frame hover-target" data-speed="1.1">
+                <img src="assets/party_2.jpg" alt="Party" />
               </div>
-              <div class="image-frame h-48">
-                <img
-                  src="assets/wedding_4.jpeg"
-                  class="w-full h-full object-cover"
-                  alt="Girls"
-                />
+              <div class="photo-frame hover-target" data-speed="1.05">
+                <img src="assets/party_1.jpg" alt="Food" />
               </div>
-              <div class="image-frame h-48">
-                <img
-                  src="assets/wedding_2.jpg"
-                  class="w-full h-full object-cover"
-                  alt="Selfie"
-                />
+              <div
+                class="photo-frame hover-target translate-y-8"
+                data-speed="1.2"
+              >
+                <img src="assets/party_3.jpg" alt="Cheers" />
               </div>
             </div>
           </div>
@@ -827,61 +911,223 @@
       </section>
 
       <section
-        id="finale"
-        class="h-screen relative flex flex-col items-center justify-center bg-[#2A0808] overflow-hidden"
+        class="min-h-[160vh] relative py-20 overflow-hidden bg-white"
+        id="chapter-3"
       >
-        <div
-          class="absolute inset-0 opacity-30 bg-[url('https://www.transparenttextures.com/patterns/seigaiha.png')]"
-        ></div>
-
-        <div
-          id="finale-text"
-          class="z-20 text-center mb-10 relative top-0 transition-all duration-500"
-        >
-          <h2 class="font-serif text-3xl text-jp-gold mb-2">
-            Lời Chúc Cuối Năm
-          </h2>
-          <p class="text-gray-400 text-sm">
-            Chạm vào bao lì xì để nhận lộc đầu năm
-          </p>
+        <div class="absolute inset-0 pointer-events-none">
+          <div
+            class="absolute top-[20%] left-[20%] w-[500px] h-[500px] bg-pink-100 rounded-full blur-[120px] mix-blend-multiply opacity-70"
+          ></div>
+          <div
+            class="absolute bottom-[20%] right-[20%] w-[600px] h-[600px] bg-red-50 rounded-full blur-[150px] mix-blend-multiply opacity-70"
+          ></div>
         </div>
 
-        <div class="envelope-wrapper interact-hover" id="lucky-envelope">
-          <div class="env-layer env-back"></div>
-
-          <div class="env-layer env-card">
-            <h3 class="text-jp-red font-bold text-2xl mb-2 font-serif">
-              ĐẠI CÁT (大吉)
-            </h3>
-            <p class="text-sm text-gray-600 italic mb-4">
-              "Năm mới bứt phá, vững vàng, đoàn kết."
+        <div class="container mx-auto px-6 relative z-10">
+          <div class="text-center mb-24" data-speed="0.8">
+            <div class="inline-block border-b-2 border-lacquer-red mb-4">
+              <span
+                class="font-serif text-sm tracking-[0.5em] text-gray-400 uppercase"
+                >Chương cuối</span
+              >
+            </div>
+            <h2
+              class="text-6xl md:text-9xl font-serif font-bold text-lacquer-red mb-2 drop-shadow-sm hover-target"
+            >
+              Hỷ Sự
+            </h2>
+            <p class="font-brush text-4xl text-antique-gold">
+              Hạnh phúc thăng hoa
             </p>
-            <div class="border-t border-gray-200 w-full pt-4 mt-2">
-              <p class="text-xs font-bold text-gray-400 uppercase">
-                Lucky Money
-              </p>
-              <p class="text-3xl font-bold text-jp-gold mt-1">
-                1 TỶ
-                <span class="text-xs text-black align-middle">(niềm vui)</span>
-              </p>
-            </div>
           </div>
 
-          <div class="env-layer env-front">
-            <div class="decor-circle">
-              <span class="font-serif text-4xl text-jp-gold font-bold">福</span>
+          <div
+            class="relative w-full max-w-6xl mx-auto h-[900px] flex justify-center items-center"
+          >
+            <div
+              class="absolute z-30 w-[300px] md:w-[500px] aspect-[3/4] photo-frame shadow-2xl border-8 border-white transform hover:scale-105 transition duration-700"
+            >
+              <img src="assets/wedding_5.jpeg" alt="Wedding Couple" />
+              <div class="absolute bottom-6 left-0 w-full text-center">
+                <div
+                  class="inline-block bg-white/90 px-6 py-2 rounded-full shadow-lg backdrop-blur"
+                >
+                  <p class="font-calligraphy text-lacquer-red text-2xl">
+                    Trăm năm hạnh phúc
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="absolute top-0 left-0 md:left-10 w-64 aspect-[3/4] photo-frame -rotate-6 z-20 opacity-0 scale-75 scroll-reveal"
+              data-y="-120"
+            >
+              <img src="assets/wedding_4.jpeg" alt="Bridesmaids" />
+            </div>
+
+            <div
+              class="absolute bottom-20 right-0 md:right-20 w-72 aspect-video photo-frame rotate-6 z-20 opacity-0 scale-75 scroll-reveal"
+              data-y="120"
+            >
+              <img src="assets/wedding_2.jpg" alt="Friends" />
+            </div>
+
+            <div
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-serif text-[18vw] text-lacquer-red opacity-[0.03] select-none whitespace-nowrap z-0"
+            >
+              LOVE STORY
             </div>
           </div>
+        </div>
+      </section>
 
-          <div class="env-layer env-flap"></div>
+      <section
+        class="h-screen relative bg-deep-green overflow-hidden"
+        id="finale"
+      >
+        <div class="absolute inset-0 opacity-20 bg-texture-dark"></div>
+        <div
+          class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-radial from-antique-gold/10 to-transparent blur-[100px] pointer-events-none"
+        ></div>
+
+        <div class="finale-stage relative z-20">
+          <div
+            class="mt-20 text-center transition-opacity duration-700"
+            id="intro-text"
+          >
+            <h2
+              class="font-serif text-5xl md:text-7xl text-antique-gold drop-shadow-lg mb-2"
+            >
+              Xuân Bính Ngọ
+            </h2>
+            <p
+              class="text-rice-paper/80 font-sans tracking-[0.3em] text-xs uppercase animate-pulse"
+            >
+              Chạm vào bao lì xì để hái lộc
+            </p>
+          </div>
+
+          <div class="branch-container">
+            <svg viewBox="0 0 600 200" preserveAspectRatio="xMidYMin slice">
+              <path
+                d="M0,50 Q150,150 300,50 T600,80"
+                fill="none"
+                stroke="#4a3b2a"
+                stroke-width="4"
+                stroke-linecap="round"
+              />
+              <path
+                d="M280,60 L320,100"
+                fill="none"
+                stroke="#4a3b2a"
+                stroke-width="3"
+              />
+              <circle cx="280" cy="60" r="5" fill="#e09696" />
+              <circle cx="320" cy="100" r="6" fill="#e09696" />
+              <circle cx="150" cy="90" r="4" fill="#e09696" />
+            </svg>
+          </div>
+
+          <div class="hanging-string" id="string">
+            <div class="knot"></div>
+          </div>
+
+          <div class="red-envelope hover-target" id="lucky-envelope">
+            <div class="envelope-seal">福</div>
+          </div>
+
+          <div class="scroll-container" id="scroll-wrapper">
+            <div class="scroll-stick-top"></div>
+            <div class="scroll-body">
+              <div
+                class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')]"
+              ></div>
+
+              <div
+                id="login-view"
+                class="relative z-10 w-full h-full flex flex-col justify-center items-center"
+              >
+                <h3 class="font-kanji text-lacquer-red text-3xl mb-1 font-bold">
+                  Danh Tính
+                </h3>
+                <p class="font-serif text-gray-500 text-xs italic mb-8">
+                  Nhập mã nhân viên của bạn
+                </p>
+
+                <input
+                  type="text"
+                  id="employee-id"
+                  class="auth-input"
+                  placeholder="NV..."
+                  autocomplete="off"
+                />
+                <button id="check-btn" class="auth-btn hover-target">
+                  Mở Sớ
+                </button>
+                <p
+                  id="error-msg"
+                  class="text-red-500 text-xs mt-4 opacity-0 font-bold font-sans"
+                >
+                  Mã không chính xác
+                </p>
+              </div>
+
+              <div
+                id="success-view"
+                class="relative z-10 w-full h-full flex flex-col justify-between hidden"
+              >
+                <div class="mt-4">
+                  <h3
+                    class="font-kanji text-lacquer-red text-4xl mb-2 font-bold"
+                  >
+                    Đại Cát
+                  </h3>
+                  <p
+                    class="font-serif text-antique-gold text-sm tracking-widest uppercase mb-4"
+                  >
+                    Chúc Mừng Năm Mới
+                  </p>
+                  <div class="w-full h-[1px] bg-gray-300 mb-6"></div>
+
+                  <p class="font-serif text-ink-black text-lg leading-loose">
+                    "Xin chào
+                    <span id="user-name" class="font-bold text-lacquer-red"
+                      >Bạn Hiền</span
+                    >,<br />
+                    Năm mới chúc bạn vạn sự như ý, sức khỏe dồi dào, tiền vào
+                    như nước."
+                  </p>
+                </div>
+
+                <div class="mb-8 flex flex-col items-center">
+                  <a id="lixi-link" href="#" class="btn-momo hover-target">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                    <span>NHẬN LÌ XÌ MOMO</span>
+                  </a>
+
+                  <p
+                    class="text-[10px] text-gray-400 uppercase tracking-widest mt-3"
+                  >
+                    Click để mở ứng dụng
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="scroll-stick-bottom"></div>
+          </div>
         </div>
       </section>
     </main>
 
     <script>
+      // 1. SETUP
+      gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+
       const lenis = new Lenis({
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smooth: true,
       });
       function raf(time) {
         lenis.raf(time);
@@ -889,97 +1135,362 @@
       }
       requestAnimationFrame(raf);
 
-      window.addEventListener("load", () => {
-        const preloader = document.getElementById("preloader");
+      // --- LOGIC BẢO MẬT & LÌ XÌ (QUAN TRỌNG) ---
 
-        setTimeout(() => {
-          preloader.classList.add("loaded");
-        }, 1000);
+      // 1. Dán dữ liệu JSON đã mã hóa từ công cụ Generator vào đây:
+      // Lưu ý: Cấu trúc phải là "MÃ_BĂM": { "name": "Tên", "secret": "LINK_MÃ_HÓA_RIÊNG" }
+      const SECURE_TEAM_DATA = {
+        f5b9aee21eef7fd37443867986c3d4e4c3d93f3d41a31140a8716a94eb9e9459: {
+          name: "TRỊNH HUY HOÀNG",
+          secret:
+            "U2FsdGVkX1+AuheL65wZulXmp1uJvVXQfQVaOtyJdiklzaLSdJMolU7MH+CaJZF2JVqxiGG1xm1qKndeLlrBYw==",
+        },
+        d7d13f56aef2ba7778ea1ee98cf5efe94f52602d0d553be1429feb6ebcb05fd1: {
+          name: "TRẦN THÙY DƯƠNG",
+          secret:
+            "U2FsdGVkX194bvAuJz4MPTu4PpKbRxhe3tR8aLtR27KZhOK01CKVR70C0xr5yX55n35I1P3FFXWrgsKcbjBRwQ==",
+        },
+        "8577da2b5c9a29170a714a435056dc3f7714008d61937a7d7897e138e7b64e33": {
+          name: "NGUYỄN ĐÌNH HUY",
+          secret:
+            "U2FsdGVkX1/n5tfJXga0HObq5tE5V879pIKQOLTne57qfXwh5j26RHqwXnp4Ob1rZSH9QPPHHRgaZYDCdV5uPA==",
+        },
+        "0d409434e1ee6fcae2c9e1df40c416783705fb67952085cbbd23a7ee1990bfe9": {
+          name: "TRẦN HỒNG TRANG NHUNG",
+          secret:
+            "U2FsdGVkX1/HnWrF/MhCI8ag68a26Bqy+AX5lN7nzbjSvApJgqUyL75DjIKCt4mqtAVcXV8ErH8AnbnyFCg9PQ==",
+        },
+        "1a50c38af46dcd0ac14693d4c29cc2f4051d0ebcd2934ee929c2bacada050aac": {
+          name: "ĐẶNG PHẠM CHÂU NHI",
+          secret:
+            "U2FsdGVkX18AMxHv8nsOAUfoZ22KWDAMgYqHwEWkoU4cNJMqfva8Ivx1zdJif73ImD1KesiBb3h3R60FTU32cQ==",
+        },
+        "35ee02cc30f66f685a94d48c0e6266aa8d73b47ae7db0bad38a12087cf9de4ce": {
+          name: "NGUYỄN HOÀNG ANH",
+          secret:
+            "U2FsdGVkX194z/3I/VK9W0XIv5ZWU2U6g89Cx6o6rm7rIGLXvpgFH1GeY6Vvm5iqwPvKSl61KMurrA29nDR9nA==",
+        },
+        fe335a21ec412c360f2ca2bc715ee7e0718508fc7d00bc28a57eefa68d4677ac: {
+          name: "MAI TRỌNG TÂN",
+          secret:
+            "U2FsdGVkX1/wqPao/QfOy59Z2DAwdvKGljjGT11OFJ0/SR0+IIIlPJZ+NMPMHgzBq/hwfTsrjDyhCr1dIBRPig==",
+        },
+        "1911aa0b26672836c1455ca2125d8963170dc451ff8c1b2cef47e5c01f1f8c4d": {
+          name: "NGUYỄN THỊ HẰNG",
+          secret:
+            "U2FsdGVkX19ITnSTiyqUUjLjtnIJMf2V4RaI+52qjXXyRJ0+r9o3KW53/0Hsq9DX9beUtAECNS3qdO9FobwTOA==",
+        },
+        "15c178525dac5853e3ffeffb1ea997a358271ac5c5b34c2965e6d178b4285a2c": {
+          name: "NGUYỄN ANH DŨNG",
+          secret:
+            "U2FsdGVkX1+7ft7S/BJkWSRoP4CzrUD1BHyjbXbulwZDAHqHdyTsGfTvb6zIwL6KQI28As4l8ewo6B8sUCC81Q==",
+        },
+        "00841e44ead325c6d51dbb71bc2e32eed7489d7b088497b40e15551f511ff0e8": {
+          name: "NGUYỄN THỊ NGA",
+          secret:
+            "U2FsdGVkX19Fsy2l7/C4PtWPsm2ECoQ6mneOuglxqASNDzkNk853QTdLSnDNPRD54i6HyQTzEgGRJZm0LyMNoQ==",
+        },
+        "7c37dde746d052af89bcb5b423abb04cc9a44626d947188cfb81a78cf617e068": {
+          name: "NGUYỄN THÀNH LUÂN",
+          secret:
+            "U2FsdGVkX1/AqsELN7yGCyFLftxb29y61GNn660mZ1u6CUR+nHHOCnEzeBju3aJha1Uqob8/RSOiu4oYvY7RYg==",
+        },
+        "5f83a6c5baf632e1e2544a9c11f97afb97c498af10b49eb4566f22a1c9b1589b": {
+          name: "NGUYỄN THỊ PHƯƠNG THẢO",
+          secret:
+            "U2FsdGVkX18sKiWMD1ZBUgB+UPFnhONh/jfCEA2G20h3GLt56JJTAe9fMGSzZPkNrxjnkTGLccwPVV8ER8Hqbw==",
+        },
+        "51f8c215241d63997a0c3f0de56ba3470c72dfa898f124623a673ea16364d901": {
+          name: "DƯƠNG THỦY QUYÊN",
+          secret:
+            "U2FsdGVkX18flLIzxE0Dp2gfrnRPKs3M1uCaGi+dKp8K5uzx6N4ZUMuqk5xS5EMGVUqYmd5kaV+WCw89dO+lXg==",
+        },
+        "73073b95eb9a9471a51e055ff0c03167c81edce0e25ecfdac3e1ec59cdd30ecb": {
+          name: "BÙI THỊ HẰNG",
+          secret:
+            "U2FsdGVkX19knqNTbNuQhSR0PFWv7899P8lschJ5s8TnWUQ94MYPiz1MJmWoB2fQMv/KPt1wDoVkgensPBO7sQ==",
+        },
+        "3ae2ee2cfbe1062b514aa2f8b78269ed91e4715d0c463c674be3ce11b94b43ba": {
+          name: "NGUYỄN HOÀNG PHƯƠNG LINH",
+          secret:
+            "U2FsdGVkX1/5xlbzGmPU2zDKcMDzKWXhWdp0n5jWgoAhfJM78LpHXUXj1tOo+ZxSPb8eFHJjZLwFqqYdPLiy9Q==",
+        },
+      };
 
-        const runEntranceAnimations = () => {
-          document.body.style.overflow = "auto";
+      const envelopeEl = document.getElementById("lucky-envelope");
+      const stringEl = document.getElementById("string");
+      const scrollWrapper = document.getElementById("scroll-wrapper");
+      const introText = document.getElementById("intro-text");
+      const checkBtn = document.getElementById("check-btn");
+      const inputEl = document.getElementById("employee-id");
+      const errorMsg = document.getElementById("error-msg");
+      const loginView = document.getElementById("login-view");
+      const successView = document.getElementById("success-view");
+      const lixiLink = document.getElementById("lixi-link");
+      const userName = document.getElementById("user-name");
 
-          gsap.to(preloader, {
-            opacity: 0,
-            duration: 1,
-            onComplete: () => {
-              preloader.style.display = "none";
+      let opened = false;
+
+      // Click Phong Bì -> Mở Sớ
+      envelopeEl.addEventListener("click", () => {
+        if (opened) return;
+        opened = true;
+        envelopeEl.style.animation = "none";
+
+        const tl = gsap.timeline();
+        tl.to(stringEl, { height: 0, duration: 0.3, ease: "power2.in" })
+          .to(".knot", { y: -150, opacity: 0, duration: 0.3 }, "<")
+          .to(
+            envelopeEl,
+            { y: 200, rotation: 0, duration: 0.6, ease: "bounce.out" },
+            "<"
+          )
+          .to(introText, { opacity: 0, y: -20, duration: 0.5 }, "<")
+          .call(() => {
+            gsap.set(scrollWrapper, {
+              opacity: 1,
+              visibility: "visible",
+              top: "55%",
+            });
+          })
+          .to(envelopeEl, { opacity: 0, scale: 0.5, duration: 0.3 })
+          .to(
+            scrollWrapper,
+            {
+              scaleY: 1,
+              duration: 1.2,
+              ease: "power2.inOut",
+              onComplete: () => {
+                inputEl.focus();
+              },
             },
-          });
+            "-=0.2"
+          );
+      });
 
-          gsap.from(".reveal-text", {
-            y: 100,
-            opacity: 0,
-            duration: 1.5,
-            stagger: 0.2,
-            ease: "power4.out",
-            delay: 0.5,
-          });
-        };
+      // Hàm băm SHA-256 (Để tra cứu ID trong DB)
+      async function hashID(string) {
+        const cleanId = string.toString().trim().toUpperCase();
+        const msgBuffer = new TextEncoder().encode(cleanId);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+      }
 
-        preloader.addEventListener("click", () => {
-          if (preloader.classList.contains("loaded")) {
-            runEntranceAnimations();
+      // Xử lý kiểm tra
+      async function handleCheck() {
+        const rawInput = inputEl.value; // Giữ nguyên input thô để làm mật khẩu giải mã
+        if (!rawInput) return;
+
+        const originalBtnText = checkBtn.innerText;
+        checkBtn.innerText = "...";
+
+        // 1. Hash input để tìm trong DB (Xác thực)
+        const hashedKey = await hashID(rawInput);
+
+        if (SECURE_TEAM_DATA[hashedKey]) {
+          // TÌM THẤY USER
+          const userData = SECURE_TEAM_DATA[hashedKey];
+          const name = userData.name;
+          const secretLink = userData.secret; // Link đã mã hóa
+
+          // 2. GIẢI MÃ LINK (Dùng chính rawInput làm mật khẩu)
+          try {
+            // Chuẩn hóa input giống như lúc tạo (Uppercase, trim)
+            const password = rawInput.toString().trim().toUpperCase();
+
+            const bytes = CryptoJS.AES.decrypt(secretLink, password);
+            const originalLink = bytes.toString(CryptoJS.enc.Utf8);
+
+            if (originalLink.startsWith("http")) {
+              lixiLink.href = originalLink;
+
+              // Chuyển cảnh thành công
+              gsap.to(loginView, {
+                opacity: 0,
+                duration: 0.3,
+                onComplete: () => {
+                  loginView.classList.add("hidden");
+                  successView.classList.remove("hidden");
+                  userName.innerText = name;
+
+                  gsap.from(successView.children, {
+                    y: 20,
+                    opacity: 0,
+                    stagger: 0.1,
+                  });
+
+                  // Pháo hoa
+                  const defaults = {
+                    startVelocity: 45,
+                    spread: 360,
+                    ticks: 100,
+                    zIndex: 99999,
+                  };
+                  confetti({
+                    ...defaults,
+                    particleCount: 100,
+                    origin: { y: 0.6 },
+                    colors: ["#c8a665", "#5e0b15"],
+                  });
+                },
+              });
+            } else {
+              throw new Error("Mật khẩu sai hoặc dữ liệu lỗi");
+            }
+          } catch (e) {
+            console.error("Decryption failed:", e);
+            showError();
           }
-        });
+        } else {
+          showError();
+        }
+
+        function showError() {
+          errorMsg.style.opacity = 1;
+          gsap.from(inputEl, { x: 10, duration: 0.1, repeat: 5, yoyo: true });
+          checkBtn.innerText = originalBtnText;
+          inputEl.focus();
+        }
+      }
+
+      checkBtn.addEventListener("click", handleCheck);
+      inputEl.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") handleCheck();
+      });
+      inputEl.addEventListener("input", () => (errorMsg.style.opacity = 0));
+
+      // --- ANIMATION CHUNG (Giữ nguyên) ---
+      window.addEventListener("load", () => {
+        const tl = gsap.timeline();
+        tl.to(".hero-seal", { opacity: 1, duration: 1, ease: "power3.out" })
+          .to("#loader-title", { opacity: 1, y: 0, duration: 1 }, "-=0.8")
+          .to("#loader-sub", { opacity: 1, y: 0, duration: 0.8 }, "-=0.6")
+          .to({}, { duration: 0.5 })
+          .to(
+            "#loader-content",
+            { opacity: 0, scale: 0.95, duration: 0.8 },
+            "fade"
+          )
+          .to(
+            "#curtain-left",
+            { x: "-100%", duration: 2, ease: "power4.inOut" },
+            "open"
+          )
+          .to(
+            "#curtain-right",
+            { x: "100%", duration: 2, ease: "power4.inOut" },
+            "open"
+          )
+          .from(
+            ".hero-title",
+            { y: 100, opacity: 0, duration: 1.8, ease: "power4.out" },
+            "-=1.5"
+          )
+          .from(
+            ".hero-line",
+            { width: 0, duration: 1.5, ease: "power2.out" },
+            "-=1.5"
+          )
+          .from(".hero-desc", { opacity: 0, y: 20, duration: 1 }, "-=1")
+          .from(".hero-scroll", { opacity: 0, y: 20, duration: 1 }, "-=1");
       });
 
       const cursorDot = document.querySelector(".cursor-dot");
-      const cursorOutline = document.querySelector(".cursor-outline");
-      const interactables = document.querySelectorAll(
-        "a, button, .interact-hover"
-      );
+      const cursorCircle = document.querySelector(".cursor-circle");
+      let mouseX = 0,
+        mouseY = 0,
+        dotX = 0,
+        dotY = 0,
+        circleX = 0,
+        circleY = 0;
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+      gsap.ticker.add(() => {
+        dotX += (mouseX - dotX) * 0.5;
+        dotY += (mouseY - dotY) * 0.5;
+        circleX += (mouseX - circleX) * 0.15;
+        circleY += (mouseY - circleY) * 0.15;
+        cursorDot.style.left = `${dotX}px`;
+        cursorDot.style.top = `${dotY}px`;
+        cursorCircle.style.left = `${circleX}px`;
+        cursorCircle.style.top = `${circleY}px`;
+      });
+      document
+        .querySelectorAll("a, button, .hover-target, input")
+        .forEach((el) => {
+          el.addEventListener("mouseenter", () =>
+            cursorCircle.classList.add("active")
+          );
+          el.addEventListener("mouseleave", () =>
+            cursorCircle.classList.remove("active")
+          );
+        });
 
-      window.addEventListener("mousemove", (e) => {
-        const posX = e.clientX;
-        const posY = e.clientY;
-        cursorDot.style.left = `${posX}px`;
-        cursorDot.style.top = `${posY}px`;
-
-        cursorOutline.animate(
-          { left: `${posX}px`, top: `${posY}px` },
-          { duration: 500, fill: "forwards" }
-        );
+      const canvas = document.getElementById("petal-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const petals = [];
+      for (let i = 0; i < 35; i++)
+        petals.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 8 + 4,
+          speedY: Math.random() * 1 + 0.5,
+          speedX: Math.random() * 1 - 0.5,
+          rotation: Math.random() * 360,
+          color: `rgba(200, 166, 101, ${Math.random() * 0.3 + 0.1})`,
+        });
+      function animatePetals() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        petals.forEach((p) => {
+          p.y += p.speedY;
+          p.x += p.speedX;
+          p.rotation += 1;
+          if (p.y > canvas.height) p.y = -10;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rotation * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+        requestAnimationFrame(animatePetals);
+      }
+      animatePetals();
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        updateSVGPath();
       });
 
-      interactables.forEach((el) => {
-        el.addEventListener("mouseenter", () =>
-          document.body.classList.add("hovering")
-        );
-        el.addEventListener("mouseleave", () =>
-          document.body.classList.remove("hovering")
-        );
-      });
-
-      function drawMusubiPath() {
-        const pathRed = document.getElementById("thread-red");
-        const pathGold = document.getElementById("thread-gold");
-        const container = document.querySelector(".musubi-container");
+      function updateSVGPath() {
         const height = document.body.scrollHeight;
-        container.style.height = `${height}px`;
-
         const width = window.innerWidth;
-        const centerX = width / 2;
-        let d = `M ${centerX} 0 `;
-        const steps = 15;
-        const stepHeight = height / steps;
-
-        for (let i = 1; i <= steps; i++) {
-          const y = i * stepHeight;
-          const amplitude = width * 0.35;
-          const x = centerX + (i % 2 === 0 ? -1 : 1) * amplitude * Math.sin(i);
-          d += `S ${x} ${y}, ${centerX} ${y} `;
+        const path = document.getElementById("main-path");
+        const bloomPath = document.getElementById("bloom-path");
+        const svg = document.getElementById("scroll-svg");
+        svg.style.height = `${height}px`;
+        svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+        let d = `M ${width / 2} 0 `;
+        for (let i = 1; i <= 20; i++) {
+          const y = i * (height / 20);
+          const x = width / 2 + (i % 2 == 0 ? -1 : 1) * width * 0.15;
+          d += `Q ${x} ${y - height / 40}, ${width / 2} ${y} `;
         }
-
-        pathRed.setAttribute("d", d);
-        pathGold.setAttribute("d", d);
-
-        const length = pathRed.getTotalLength();
-        pathRed.style.strokeDasharray = length;
-        pathRed.style.strokeDashoffset = length;
-        pathGold.style.strokeDasharray = length;
-
-        gsap.to(pathRed, {
+        path.setAttribute("d", d);
+        bloomPath.setAttribute("d", d);
+        const l = path.getTotalLength();
+        gsap.set([path, bloomPath], {
+          strokeDasharray: l,
+          strokeDashoffset: l,
+        });
+        gsap.to([path, bloomPath], {
           strokeDashoffset: 0,
           ease: "none",
           scrollTrigger: {
@@ -990,169 +1501,68 @@
           },
         });
       }
+      updateSVGPath();
 
-      window.addEventListener("load", drawMusubiPath);
-      window.addEventListener("resize", drawMusubiPath);
-
-      gsap.utils.toArray(".stagger-list > div").forEach((item) => {
-        gsap.from(item, {
-          x: -50,
-          opacity: 0,
-          duration: 0.8,
-          scrollTrigger: { trigger: item, start: "top 85%" },
-        });
-      });
-
-      gsap.utils.toArray(".stagger-list-2 > div").forEach((item) => {
-        gsap.from(item, {
-          x: 50,
-          opacity: 0,
-          duration: 0.8,
-          scrollTrigger: { trigger: item, start: "top 85%" },
-        });
-      });
-
-      document.querySelectorAll(".story-block").forEach((block) => {
-        const images = block.querySelectorAll("img");
-        gsap.to(images, {
-          y: -50,
+      document.querySelectorAll(".scroll-reveal").forEach((el) => {
+        const y = el.getAttribute("data-y") || 50;
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 100 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            scrollTrigger: { trigger: el, start: "top 85%" },
+          }
+        );
+        gsap.to(el, {
+          y: -y,
           ease: "none",
           scrollTrigger: {
-            trigger: block,
+            trigger: el,
             start: "top bottom",
             end: "bottom top",
             scrub: true,
           },
         });
       });
-
-      const sakuraCanvas = document.getElementById("sakura-canvas");
-      const ctx = sakuraCanvas.getContext("2d");
-      sakuraCanvas.width = window.innerWidth;
-      sakuraCanvas.height = window.innerHeight;
-
-      const petals = [];
-      const numPetals = 25;
-
-      const petalColors = [
-        "rgba(212, 175, 55, 0.4)",
-        "rgba(255, 250, 240, 0.5)",
-        "rgba(230, 180, 180, 0.4)",
-      ];
-
-      class Petal {
-        constructor() {
-          this.x = Math.random() * sakuraCanvas.width;
-          this.y = Math.random() * sakuraCanvas.height - sakuraCanvas.height;
-          this.size = Math.random() * 12 + 5;
-          this.speedX = Math.random() * 1.5 - 0.75;
-          this.speedY = Math.random() * 1 + 0.5;
-          this.rotation = Math.random() * 360;
-          this.rotationSpeed = Math.random() * 1 - 0.5;
-          this.color =
-            petalColors[Math.floor(Math.random() * petalColors.length)];
-        }
-
-        update() {
-          this.y += this.speedY;
-          this.x += this.speedX + Math.sin(this.y / 100) * 0.5;
-          this.rotation += this.rotationSpeed;
-
-          if (this.y > sakuraCanvas.height) {
-            this.y = -20;
-            this.x = Math.random() * sakuraCanvas.width;
+      gsap.to(".member-block", {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        scrollTrigger: { trigger: ".member-block", start: "top 80%" },
+      });
+      document.querySelectorAll(".member-col").forEach((col) => {
+        gsap.fromTo(
+          col.querySelectorAll("li"),
+          { opacity: 0, x: -20 },
+          {
+            opacity: 1,
+            x: 0,
+            stagger: 0.1,
+            duration: 0.8,
+            scrollTrigger: { trigger: col, start: "top 75%" },
           }
-        }
-
-        draw() {
-          ctx.save();
-          ctx.translate(this.x, this.y);
-          ctx.rotate((this.rotation * Math.PI) / 180);
-          ctx.fillStyle = this.color;
-          ctx.beginPath();
-          ctx.ellipse(0, 0, this.size, this.size / 1.8, 0, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.restore();
-        }
-      }
-
-      for (let i = 0; i < numPetals; i++) {
-        petals.push(new Petal());
-      }
-
-      function animateSakura() {
-        ctx.clearRect(0, 0, sakuraCanvas.width, sakuraCanvas.height);
-        petals.forEach((petal) => {
-          petal.update();
-          petal.draw();
-        });
-        requestAnimationFrame(animateSakura);
-      }
-      animateSakura();
-
-      window.addEventListener("resize", () => {
-        sakuraCanvas.width = window.innerWidth;
-        sakuraCanvas.height = window.innerHeight;
+        );
       });
-
-      const envelopeWrapper = document.getElementById("lucky-envelope");
-      const card = envelopeWrapper.querySelector(".env-card");
-      let isOpened = false;
-
-      envelopeWrapper.addEventListener("click", () => {
-        if (isOpened) return;
-        isOpened = true;
-
-        envelopeWrapper.classList.add("is-open");
-        gsap.to("#finale-text", {
-          y: -50,
-          opacity: 0,
-          duration: 0.5,
-          ease: "power2.in",
-        });
-
-        const tl = gsap.timeline();
-
-        tl.to(card, {
-          y: -280,
-          duration: 0.8,
-          delay: 0.3,
-          ease: "back.out(1.2)",
-        }).to(card, {
-          scale: 1.5,
-          y: -180,
-          zIndex: 50,
-          rotateY: 360,
-          duration: 1.2,
-          ease: "power3.inOut",
-          onComplete: () => {
-            confetti({
-              particleCount: 200,
-              spread: 100,
-              origin: { y: 0.6 },
-              colors: ["#D4AF37", "#C42128", "#FFFFFF", "#FFD700"],
-            });
-            setTimeout(() => {
-              confetti({
-                particleCount: 150,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-                colors: ["#D4AF37", "#C42128"],
-              });
-              confetti({
-                particleCount: 150,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-                colors: ["#D4AF37", "#C42128"],
-              });
-            }, 500);
-          },
-        });
-      });
+      const observer = new IntersectionObserver((entries) =>
+        entries.forEach(
+          (e) => e.isIntersecting && e.target.classList.add("is-inview")
+        )
+      );
+      document
+        .querySelectorAll(".text-reveal-wrapper")
+        .forEach((el) => observer.observe(el));
+      gsap.utils.toArray(".photo-frame").forEach((frame) =>
+        gsap.to(frame, {
+          y: "15px",
+          duration: 2 + Math.random(),
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut",
+          delay: Math.random(),
+        })
+      );
     </script>
   </body>
 </html>
-
-
